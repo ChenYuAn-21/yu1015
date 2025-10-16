@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>簡單部落格</title>
+</head>
+<body>
+    <h1>部落格文章列表</h1>
+    <ul>
+        {% for post in posts %}
+            <li>
+                <a href="{{ url_for('post', post_id=post.id) }}">
+                    <strong>{{ post.title }}</strong> - {{ post.author }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
