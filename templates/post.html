@@ -2,14 +2,58 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
+  <meta charset="UTF-8">
   <title>交易明細</title>
+  <style>
+    body {
+      font-family: "Microsoft JhengHei", sans-serif;
+      background-color: #f5f7fa;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+      padding: 30px 40px;
+      max-width: 400px;
+      text-align: center;
+    }
+    h1 {
+      margin-top: 0;
+      color: #34495e;
+    }
+    p {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+    .back-btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: 0.3s;
+    }
+    .back-btn:hover {
+      background-color: #2980b9;
+    }
+  </style>
 </head>
 <body>
-  <h1>{{ record.item }}</h1>
-  <p>日期：{{ record.date }}</p>
-  <p>類別：{{ record.category }}</p>
-  <p>金額：${{ record.amount }}</p>
-  <a href="{{ url_for('dashboard') }}">返回儀表板</a>
+  <div class="card">
+    <h1>{{ record.item }}</h1>
+    <p>日期：{{ record.date }}</p>
+    <p>類別：{{ record.category }}</p>
+    <p>金額：${{ record.amount }}</p>
+    <a href="{{ url_for('dashboard') }}" class="back-btn">返回儀表板</a>
+  </div>
 </body>
 </html>
+
 
