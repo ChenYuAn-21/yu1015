@@ -2,18 +2,187 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>簡單部落格</title>
+    <title>理財儀表板</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+        }
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        .card h2 {
+            margin-top: 0;
+            color: #34495e;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border-bottom: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #ecf0f1;
+        }
+        .add-transaction {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .add-transaction:hover {
+            background-color: #219150;
+        }
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            margin-top: 10px;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+    </style>
 </head>
 <body>
-    <h1>部落格文章列表</h1>
-    <ul>
-        {% for post in posts %}
-            <li>
-                <a href="{{ url_for('post', post_id=post.id) }}">
-                    <strong>{{ post.title }}</strong> - {{ post.author }}
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
+    <header>
+        <h1>理財儀表板</h1>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>💰 總資產</h2>
+            <p><strong>${{ total_assets }}</strong></p>
+        </div>
+
+        <div class="card">
+            <h2>📈 投資報酬率</h2>
+            <p><strong>{{ roi }}%</strong></p>
+        </div>
+
+        <div class="card">
+            <h2>📊 資產分佈</h2>
+            <div class="chart-container">
+                <canvas id="assetChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin: 20px;">
+        <h2>📅 最近交易紀錄</h2>
+        <table>
+            <tr>
+                <th>日期</th>
+                <th>項目</th>
+                <th>類別</th>
+                <th>金額</th>
+            </tr>
+            {% for record in records %}
+            <tr>
+                <td>{{ record.date }}</td>
+                <td>{{ record.item }}</td>
+                <td>{{ record.category }}</td>
+                <td>${{ record.amount }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <br>
+        <button class="add-transaction">新增交易</button>
+    </div>
+
+    <div class="card" style="margin: 20px;">
+        <h2>📆 月度報酬率趨勢</h2>
+        <div class="chart-container" id="roiChartContainer"></div>
+    </div>
+
+    <footer>
+        理財儀表板 © 2025
+    </footer>
+
+    <script>
+        // 資產分佈圓餅圖
+        const ctxAsset = document.getElementById('assetChart');
+        new Chart(ctxAsset, {
+            type: 'pie',
+            data: {
+                labels: ['股票', '債券', '現金', '基金', '其他'],
+                datasets: [{
+                    label: '資產分佈',
+                    data: [45, 25, 15, 10, 5],
+                    backgroundColor: [
+                        '#3498db',
+                        '#2ecc71',
+                        '#f1c40f',
+                        '#9b59b6',
+                        '#e67e22'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // 月度報酬率折線圖
+        const roiCanvas = document.createElement('canvas');
+        document.getElementById('roiChartContainer').appendChild(roiCanvas);
+
+        new Chart(roiCanvas, {
+            type: 'line',
+            data: {
+                labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月'],
+                datasets: [{
+                    label: '月度報酬率 (%)',
+                    data: [2.1, 1.5, -0.3, 2.8, 3.4, 1.9, 2.5, 0.8, 1.7, 2.9],
+                    borderColor: '#27ae60',
+                    tension: 0.3,
+                    fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: '%'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>
+

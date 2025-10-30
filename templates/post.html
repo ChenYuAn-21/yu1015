@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <title>{{ post.title }}</title>
+  <meta charset="UTF-8">
+  <title>交易明細</title>
 </head>
 <body>
-    <h1>{{ post.title }}</h1>
-    <p><strong>作者：</strong>{{ post.author }}</p>
-    <div>
-        {{ post.content }}
-    </div>
-    <p><a href="{{ url_for('index') }}">← 回到文章列表</a></p>
+  <h1>{{ record.item }}</h1>
+  <p>日期：{{ record.date }}</p>
+  <p>類別：{{ record.category }}</p>
+  <p>金額：${{ record.amount }}</p>
+  <a href="{{ url_for('dashboard') }}">返回儀表板</a>
 </body>
 </html>
+
