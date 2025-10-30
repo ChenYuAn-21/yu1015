@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect, url_for
-from datetime import date
 
 app = Flask(__name__)
 
@@ -13,16 +12,18 @@ def calculate_roi(records):
     investment_records = [r for r in records if r['category'] == '投資']
     if not investment_records:
         return 0
-    total_invested = sum(r['amount'] for r in investment_records)
-    total_return = total_invested * 0.1  # 假設報酬率 10%
+    total_invested = sum(float(r['amount']) for r in investment_records)
+    if total_invested == 0:
+        return 0
+    total_return = total_invested * 0.1
     roi = (total_return / total_invested) * 100
     return round(roi, 2)
 
 @app.route('/')
 def dashboard():
-    total_assets = sum(r['amount'] for r in records)
+    total_assets = sum(float(r['amount']) for r in records)
     roi = calculate_roi(records)
-    return render_template("render.html", total_assets=total_assets, roi=roi, records=records)
+    return render_template("index.html", total_assets=total_assets, roi=roi, records=records)
 
 @app.route('/add_transaction', methods=['POST'])
 def add_transaction():
@@ -45,6 +46,8 @@ def add_transaction():
 
 @app.route('/post/<int:index>')
 def post_detail(index):
+    if index < 0 or index >= len(records):
+        return "交易不存在", 404
     record = records[index]
     return render_template("post.html", record=record)
 
